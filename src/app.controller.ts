@@ -1,5 +1,9 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
+import {
+  ConcertSearchOptions,
+  PaginatedConcertList,
+} from './interface/concerts.interface';
 import { ConcertService } from './services/concert.service';
 
 @Controller()
@@ -14,8 +18,10 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get('/concertList/:artistName/:artistYear?')
-  getConcerts(@Param() { artistName, artistYear }: ConcertListParams) {
-    return this.concertService.getConcertList(artistName, artistYear);
+  @Post('/searchConcerts')
+  getConcerts(
+    @Body() { searchTerm, max, sortOrder }: ConcertSearchOptions,
+  ): Promise<PaginatedConcertList> {
+    return this.concertService.getConcertList({ searchTerm, max, sortOrder });
   }
 }
