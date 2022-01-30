@@ -1,9 +1,9 @@
-import * as chunk from 'lodash.chunk';
+import chunk from 'lodash.chunk';
 import {
   ArchiveSearchOptions,
+  ETREE,
   PaginatedConcertList,
   SearchResponse,
-  SingleConcert,
 } from '../interface/concerts.interface';
 
 export const baseOptions: Omit<ArchiveSearchOptions, 'max' | 'sortBy'> = {
@@ -11,11 +11,11 @@ export const baseOptions: Omit<ArchiveSearchOptions, 'max' | 'sortBy'> = {
   fields: ['description', 'identifier', 'mediatype', 'title', 'year', 'date'],
 };
 
-export function formatResponse(
+export function paginateResponse(
   searchResponse: SearchResponse,
 ): PaginatedConcertList {
   const filterMediaType = searchResponse.docs.filter(
-    ({ mediatype }) => mediatype === 'etree',
+    ({ mediatype }) => mediatype === ETREE,
   );
   return chunk(filterMediaType, 30);
 }
