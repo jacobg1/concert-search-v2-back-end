@@ -1,27 +1,27 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import {
   ConcertSearchOptions,
+  MediaFormat,
   PaginatedConcertList,
 } from './interface/concerts.interface';
 import { ConcertService } from './services/concert.service';
 
 @Controller()
 export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    private readonly concertService: ConcertService,
-  ) {}
+  constructor(private readonly concertService: ConcertService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Post('/concerts')
+  getConcerts(
+    @Body() body: ConcertSearchOptions,
+  ): Promise<PaginatedConcertList> {
+    return this.concertService.getConcertList(body);
   }
 
-  @Post('/searchConcerts')
-  getConcerts(
-    @Body() { searchTerm, max, sortOrder }: ConcertSearchOptions,
-  ): Promise<PaginatedConcertList> {
-    return this.concertService.getConcertList({ searchTerm, max, sortOrder });
+  @Get('/concerts/:id/format/:format')
+  getConcertDataById(
+    @Param('id') id: string,
+    @Param('format') format: MediaFormat,
+  ) {
+    return this.concertService.getSingleConcert(id, format);
   }
 }
