@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { GetConcertDto } from './dto';
 import {
-  ConcertSearchOptions,
   MediaFormat,
   PaginatedConcertList,
 } from './interface/concerts.interface';
@@ -11,14 +11,14 @@ export class AppController {
   constructor(private readonly concertService: ConcertService) {}
 
   @Post('/concerts')
-  getConcerts(
-    @Body() body: ConcertSearchOptions,
+  async getConcerts(
+    @Body() body: GetConcertDto,
   ): Promise<PaginatedConcertList> {
     return this.concertService.getConcertList(body);
   }
 
   @Get('/concerts/:id/format/:format')
-  getConcertDataById(
+  async getConcertDataById(
     @Param('id') id: string,
     @Param('format') format: MediaFormat,
   ) {
