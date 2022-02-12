@@ -9,7 +9,7 @@ export interface SingleConcert {
 
 export type PaginatedConcertList = SingleConcert[][];
 
-enum SortOrder {
+export enum SortOrder {
   ASC = 'asc',
   DESC = 'desc',
 }
@@ -27,19 +27,23 @@ export enum MediaFormat {
 
 // Passed from front-end
 export interface ConcertSearchOptions {
-  searchTerm: string; // 'Grateful+Dead+AND+year%3A1977'
+  searchTerm: string; // EX: 'Grateful+Dead+AND+year%3A1977'
   max: number;
   sortOrder: SortOrder;
+  filterDuplicates: boolean;
 }
 
-type SortByOptions = Record<string, SortOrder>;
-
-// Passed into archiveSearch library
-export interface ArchiveSearchOptions {
+// Base options not set by user
+export interface BaseSearchOptions {
   searchBy: string;
   fields: string[];
+}
+
+// Options passed to archive.org
+export interface ArchiveSearchOptions extends BaseSearchOptions {
   max: number;
-  sortBy: SortByOptions;
+  sortBy: Record<string, SortOrder>;
+  filterDuplicates: boolean;
 }
 
 // Response from archive's api

@@ -1,12 +1,12 @@
 import chunk from 'lodash.chunk';
 import {
-  ArchiveSearchOptions,
+  BaseSearchOptions,
   ETREE,
   PaginatedConcertList,
   SearchResponse,
 } from '../interface/concerts.interface';
 
-export const baseOptions: Omit<ArchiveSearchOptions, 'max' | 'sortBy'> = {
+export const baseOptions: BaseSearchOptions = {
   searchBy: 'creator',
   fields: ['description', 'identifier', 'mediatype', 'title', 'year', 'date'],
 };
