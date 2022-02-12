@@ -5,6 +5,11 @@ export interface SingleConcert {
   title: string;
   year: number;
   date: string;
+  coverage: string;
+  creator: string;
+  downloads: number;
+  format: string[];
+  source: string;
 }
 
 export type PaginatedConcertList = SingleConcert[][];
@@ -25,11 +30,13 @@ export enum MediaFormat {
   OGG = 'Ogg Vorbis',
 }
 
+export type SortBy = Record<string, SortOrder>;
+
 // Passed from front-end
 export interface ConcertSearchOptions {
   searchTerm: string; // EX: 'Grateful+Dead+AND+year%3A1977'
   max: number;
-  sortOrder: SortOrder;
+  sortBy: SortBy;
   filterDuplicates: boolean;
 }
 
@@ -42,8 +49,7 @@ export interface BaseSearchOptions {
 // Options passed to archive.org
 export interface ArchiveSearchOptions extends BaseSearchOptions {
   max: number;
-  sortBy: Record<string, SortOrder>;
-  filterDuplicates: boolean;
+  sortBy: SortBy;
 }
 
 // Response from archive's api
@@ -76,6 +82,10 @@ interface TrackListData {
 }
 
 export interface ConcertData {
-  files: TrackListData[];
+  trackList: TrackListData[];
   metadata: TrackMetaData;
+}
+
+export interface ConcertResponse extends Omit<ConcertData, 'trackList'> {
+  files: TrackListData[];
 }
