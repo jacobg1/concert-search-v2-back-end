@@ -1,19 +1,38 @@
-import { IsBoolean, IsEnum, IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 import {
-  ConcertSearchOptions,
-  SortOrder,
-} from './interface/concerts.interface';
+  IsBoolean,
+  IsEnum,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { SortOrder } from './interface/concerts.interface';
+import type { SortBy } from './interface/concerts.interface';
 
-export class GetConcertDto implements ConcertSearchOptions {
+class SortByDto {
+  @IsOptional()
+  @IsEnum(SortOrder)
+  date: SortOrder;
+
+  @IsOptional()
+  @IsEnum(SortOrder)
+  downloads: SortOrder;
+}
+
+export class GetConcertDto {
   @IsString()
   searchTerm: string;
 
   @IsNumber({ allowNaN: false, allowInfinity: false })
   max: number;
 
-  @IsEnum(SortOrder)
-  sortOrder: SortOrder;
-
   @IsBoolean()
   filterDuplicates: boolean;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => SortByDto)
+  sortBy: SortBy;
 }
