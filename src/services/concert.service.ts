@@ -3,11 +3,11 @@ import { Injectable } from '@nestjs/common';
 import { baseOptions, paginateResponse } from './concert.util';
 import {
   ConcertSearchOptions,
-  ArchiveSearchOptions,
   SearchResponse,
   PaginatedConcertList,
   ConcertData,
   MediaFormat,
+  ArchiveSearchOptions,
 } from '../interface/concerts.interface';
 
 // import * as concertListMock from '../../test/mocks/concertListMock.json';
@@ -19,18 +19,20 @@ export class ConcertService {
     searchTerm,
     max,
     sortOrder,
+    filterDuplicates,
   }: ConcertSearchOptions): Promise<PaginatedConcertList> {
     const searchOptions: ArchiveSearchOptions = {
       ...baseOptions,
       max,
       sortBy: { date: sortOrder },
+      filterDuplicates,
     };
     const searchConcerts: SearchResponse = await archiveSearch.search(
       searchTerm,
       searchOptions,
     );
-    // const searchConcerts: SearchResponse = searchResponse;
-    return paginateResponse(searchConcerts);
+    // const searchConcerts: any = searchResponse;
+    return paginateResponse(filterDuplicates ? searchConcerts : searchConcerts); // TODO: implement dedupe
   }
 
   async getSingleConcert(
