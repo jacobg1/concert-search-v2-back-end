@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { GetConcertDto } from './dto';
 import {
   MediaFormat,
@@ -11,6 +11,7 @@ export class AppController {
   constructor(private readonly concertService: ConcertService) {}
 
   @Post('/concerts')
+  @HttpCode(200)
   async getConcerts(
     @Body() body: GetConcertDto,
   ): Promise<PaginatedConcertList> {
