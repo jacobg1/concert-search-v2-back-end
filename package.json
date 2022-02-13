@@ -1,8 +1,8 @@
 {
   "name": "concert-search-v2-be",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "concert-search back-end",
+  "author": "jacob-greenwald",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -81,5 +81,9 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "engines": {
+    "node": "14.18.3",
+    "npm": "6.14.15"
   }
 }
