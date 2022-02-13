@@ -49,7 +49,7 @@ export function paginateResponse(
       if (filterDuplicates) {
         if (
           isProperFormat(curr.mediatype, curr.format) &&
-          !acc.some(({ title }) => title === curr.title)
+          !acc.some(({ date }) => date === curr.date)
         ) {
           return acc.concat(curr);
         }
