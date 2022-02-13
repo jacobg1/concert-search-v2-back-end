@@ -6,6 +6,8 @@ import { eventContext } from 'aws-serverless-express/middleware';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
+import helmet from 'helmet';
 
 const express = require('express');
 
@@ -19,7 +21,12 @@ async function bootstrapServer(): Promise<Server> {
     const nestApp = await NestFactory.create(
       AppModule,
       new ExpressAdapter(expressApp),
+      { cors: true },
     );
+    nestApp.useGlobalPipes(
+      new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+    );
+    nestApp.use(helmet());
     nestApp.use(eventContext());
     await nestApp.init();
     cachedServer = createServer(expressApp, undefined, binaryMimeTypes);
