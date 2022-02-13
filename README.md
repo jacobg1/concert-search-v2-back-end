@@ -64,6 +64,6 @@ $ npm run test:cov
 # deploy to aws lambda
 serverless deploy
 
-# offline development with sls
+# offline development with serverless
 serverless offline
 ```
