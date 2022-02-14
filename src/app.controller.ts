@@ -10,6 +10,12 @@ import { ConcertService } from './services/concert.service';
 export class AppController {
   constructor(private readonly concertService: ConcertService) {}
 
+  @Get('/')
+  @HttpCode(200)
+  async healtCheck(): Promise<string> {
+    return 'Instance is healthy';
+  }
+
   @Post('/concerts')
   @HttpCode(200)
   async getConcerts(
