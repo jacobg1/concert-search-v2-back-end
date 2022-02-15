@@ -12,7 +12,7 @@ export class AppController {
 
   @Get('/')
   @HttpCode(200)
-  async healtCheck(): Promise<string> {
+  async healthCheck(): Promise<string> {
     return 'Instance is healthy';
   }
 
