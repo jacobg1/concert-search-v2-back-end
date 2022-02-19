@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import {
+  ArrayNotEmpty,
   IsBoolean,
   IsEnum,
   IsNumber,
@@ -8,7 +9,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { SortOrder } from './interface/concerts.interface';
+import { MediaFormat, SortOrder } from './interface/concerts.interface';
 import type { SortBy } from './interface/concerts.interface';
 
 class SortByDto {
@@ -21,7 +22,7 @@ class SortByDto {
   downloads: SortOrder;
 }
 
-export class GetConcertDto {
+export class ConcertListDto {
   @IsString()
   searchTerm: string;
 
@@ -35,4 +36,8 @@ export class GetConcertDto {
   @ValidateNested()
   @Type(() => SortByDto)
   sortBy: SortBy;
+
+  @ArrayNotEmpty()
+  @IsEnum(MediaFormat, { each: true })
+  mediaFormat: MediaFormat[];
 }
