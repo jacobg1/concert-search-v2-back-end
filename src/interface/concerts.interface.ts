@@ -8,7 +8,7 @@ export interface SingleConcert {
   coverage: string;
   creator: string;
   downloads: number;
-  format: string[];
+  format: MediaFormat[];
   source: string;
 }
 
@@ -28,31 +28,43 @@ export const { ETREE } = MediaType;
 export enum MediaFormat {
   MP3 = 'VBR MP3',
   OGG = 'Ogg Vorbis',
+  FLAC = 'Flac',
 }
 
 export type SortBy = Record<string, SortOrder>;
 
-// Passed from front-end
+/**
+ * Passed from front-end
+ * @param mediaFormat user requested media formats
+ * @param searchTerm  EX: 'Grateful+Dead+AND+year%3A1977'
+ */
 export interface ConcertSearchOptions {
-  searchTerm: string; // EX: 'Grateful+Dead+AND+year%3A1977'
+  searchTerm: string;
   max: number;
   sortBy: SortBy;
   filterDuplicates: boolean;
+  mediaFormat: MediaFormat[];
 }
 
-// Base options not set by user
+/**
+ * Base options not set by user
+ */
 export interface BaseSearchOptions {
   searchBy: string;
   fields: string[];
 }
 
-// Options passed to archive.org
+/**
+ * Options passed to archive.org
+ */
 export interface ArchiveSearchOptions extends BaseSearchOptions {
   max: number;
   sortBy: SortBy;
 }
 
-// Response from archive's api
+/**
+ * Response from archive's api
+ */
 export interface SearchResponse {
   numFound: number;
   start: number;
@@ -61,7 +73,6 @@ export interface SearchResponse {
 
 interface TrackMetaData {
   title: string;
-  numTracks: string;
   creator: string;
   description: string;
   date: string;
@@ -69,16 +80,13 @@ interface TrackMetaData {
   source: string;
 }
 
-interface TrackListData {
+export interface TrackListData {
+  format: MediaFormat;
   name: string;
-  link: string;
-  title: string;
-  creator: string;
-  length: string;
-  track: string;
   source: string;
-  album: string;
-  format: string;
+  original: string;
+  length: string;
+  link: string;
 }
 
 export interface ConcertData {
