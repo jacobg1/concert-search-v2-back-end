@@ -2,14 +2,12 @@ import { BadRequestException } from '@nestjs/common';
 import chunk from 'lodash.chunk';
 import {
   BaseSearchOptions,
-  ETREE,
+  ConcertSearchOptions,
   MediaFormat,
   PaginatedConcertList,
   SearchResponse,
   SingleConcert,
 } from '../interface/concerts.interface';
-
-const { MP3, OGG } = MediaFormat;
 
 export const baseOptions: BaseSearchOptions = {
   searchBy: 'creator',
@@ -32,30 +30,36 @@ export const baseOptions: BaseSearchOptions = {
   ],
 };
 
-const includesFormat = (array: string[]) => {
-  return [OGG, MP3].some((format) => array.indexOf(format) !== -1);
+// This ensures that concerts will have requested formats sent from front-end
+const isProperFormat = (
+  concertFormats: MediaFormat[],
+  mediaFormat: MediaFormat[],
+) => {
+  return mediaFormat.some((format) => concertFormats.indexOf(format) !== -1);
 };
 
-const isProperFormat = (mediatype: string, format: string[]) => {
-  return mediatype === ETREE && includesFormat(format);
-};
+type FilterParams = Pick<
+  ConcertSearchOptions,
+  'filterDuplicates' | 'mediaFormat'
+>;
 
+// Apply filters from front-end and paginate
 export function paginateResponse(
   searchResponse: SearchResponse,
-  filterDuplicates: boolean,
+  { filterDuplicates, mediaFormat }: FilterParams,
 ): PaginatedConcertList {
   const filterAndDedupe = searchResponse.docs.reduce<SingleConcert[]>(
     (acc, curr) => {
       if (filterDuplicates) {
         if (
-          isProperFormat(curr.mediatype, curr.format) &&
+          isProperFormat(curr.format, mediaFormat) &&
           !acc.some(({ date }) => date === curr.date)
         ) {
           return acc.concat(curr);
         }
         return acc;
       }
-      if (isProperFormat(curr.mediatype, curr.format)) {
+      if (isProperFormat(curr.format, mediaFormat)) {
         return acc.concat(curr);
       }
       return acc;

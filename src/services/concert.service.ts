@@ -11,8 +11,7 @@ import {
   ConcertResponse,
 } from '../interface/concerts.interface';
 
-// import * as concertListMock from '../../test/mocks/concertListMock.json';
-// import * as searchResponse from '../../test/mocks/searchResponse.json';
+const { MP3 } = MediaFormat;
 
 @Injectable()
 export class ConcertService {
@@ -20,31 +19,31 @@ export class ConcertService {
     searchTerm,
     max,
     sortBy,
-    filterDuplicates,
+    ...rest
   }: ConcertSearchOptions): Promise<PaginatedConcertList> {
     const searchOptions: ArchiveSearchOptions = {
       ...baseOptions,
       max,
       sortBy,
     };
+
     const searchConcerts: SearchResponse = await archiveSearch.search(
       searchTerm,
       searchOptions,
     );
-    // const searchConcerts: any = searchResponse;
-    return paginateResponse(searchConcerts, filterDuplicates);
-  }
-  async getSingleConcert(
-    id: string,
-    format: MediaFormat,
-  ): Promise<ConcertData> {
-    const selectedFormat = MediaFormat[format.toUpperCase()];
-    const concert: ConcertResponse = await archiveSearch.metaSearch(id);
 
+    return paginateResponse(searchConcerts, rest);
+  }
+
+  async getSingleConcert(id: string): Promise<ConcertData> {
+    const concert: ConcertResponse = await archiveSearch.metaSearch(id);
     const { metadata, files } = concert;
+
     return {
       metadata,
-      trackList: files.filter((file) => file.format === selectedFormat),
+      // Filter for mp3 so that we don't send uneeded formats to front-end
+      // We can switch formats by updating file name someId.mp3 => someId.ogg
+      trackList: files.filter((file) => file.format === MP3),
     };
   }
 }
