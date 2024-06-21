@@ -1,5 +1,5 @@
 import { archiveSearch } from 'archive-search';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { baseOptions, paginateResponse } from './concert.util';
 import {
   ConcertSearchOptions,
@@ -9,7 +9,8 @@ import {
   MediaFormat,
   ArchiveSearchOptions,
   ConcertResponse,
-} from '../interface/concerts.interface';
+} from '../interface';
+import { ConcertValidator } from '../helpers';
 
 const { MP3 } = MediaFormat;
 
@@ -18,7 +19,10 @@ export class ConcertService {
   async getConcertList(request: {
     body: ConcertSearchOptions;
   }): Promise<PaginatedConcertList> {
-    const { searchTerm, max, sortBy, ...rest } = request.body;
+    const concertValidator = new ConcertValidator();
+    const validatedPayload = await concertValidator.transform(request.body);
+
+    const { searchTerm, max, sortBy, ...rest } = validatedPayload;
 
     const searchOptions: ArchiveSearchOptions = {
       ...baseOptions,
@@ -36,6 +40,10 @@ export class ConcertService {
 
   async getSingleConcert(request): Promise<ConcertData> {
     const { id } = request.pathParameters;
+
+    if (!id) {
+      throw new BadRequestException('Invalid request');
+    }
 
     const concert: ConcertResponse = await archiveSearch.metaSearch(id);
 

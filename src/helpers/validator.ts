@@ -1,14 +1,10 @@
-import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
-import { ConcertListDto } from './dto';
-import {
-  ConcertSearchOptions,
-  MediaFormat,
-} from './interface/concerts.interface';
+import { ConcertListDto } from '../dto';
+import { ConcertSearchOptions, MediaFormat } from '../interface';
 
-@Injectable()
-export class MediaFormatPipe implements PipeTransform {
+export class ConcertValidator {
   formatValue(value: string[]): MediaFormat[] {
     return value.map((val) => MediaFormat[val.toLocaleUpperCase()]);
   }
@@ -21,7 +17,12 @@ export class MediaFormatPipe implements PipeTransform {
     };
 
     const instance = plainToClass(ConcertListDto, formatObj);
-    const errors = await validate(instance);
+
+    const errors = await validate(instance, {
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      validationError: { target: false },
+    });
 
     if (errors.length > 0) {
       const joinErrors = (array) => (acc, curr, i) => {
@@ -30,10 +31,12 @@ export class MediaFormatPipe implements PipeTransform {
       };
 
       throw new BadRequestException(
-        errors.map(({ constraints }) => {
-          const array = Object.values(constraints);
-          return array.reduce(joinErrors(array), '');
-        }),
+        errors
+          .map(({ constraints }) => {
+            const array = Object.values(constraints);
+            return array.reduce(joinErrors(array), '');
+          })
+          .join(', '),
       );
     }
     return formatObj;
