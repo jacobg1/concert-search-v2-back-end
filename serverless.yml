@@ -13,10 +13,19 @@ package:
 provider:
   name: aws
   runtime: nodejs20.x
+  httpApi:
+    cors: 
+      allowedOrigins: 
+        - "https://concert-search.com"
+      allowedMethods:
+        - GET
+        - POST
+      maxAge: 600
 
 functions:
   main:
     handler: dist/main.handler
+    timeout: 29
     events:
       - httpApi:
           method: POST
