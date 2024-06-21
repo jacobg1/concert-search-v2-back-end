@@ -7,7 +7,7 @@ import {
   PaginatedConcertList,
   SearchResponse,
   SingleConcert,
-} from '../interface/concerts.interface';
+} from '../interface';
 
 export const baseOptions: BaseSearchOptions = {
   searchBy: 'creator',

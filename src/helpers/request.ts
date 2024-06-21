@@ -1,5 +1,5 @@
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
-import { RequestData } from 'src/interface/concerts.interface';
+import { RequestData } from '../interface';
 
 const parseReqBody = (body: string): Record<string, any> => {
   try {
