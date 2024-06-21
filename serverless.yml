@@ -1,0 +1,23 @@
+service: concert-search
+
+plugins:
+  - serverless-offline
+
+package:
+  individually: true
+  patterns:
+    - "!./**"
+    - ./dist/**
+    - ./package.json
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+
+functions:
+  main:
+    handler: dist/main.handler
+    events:
+      - httpApi:
+          method: ANY
+          path: '/{proxy+}'

@@ -46,4 +46,10 @@ export class ConcertService {
       trackList: files.filter((file) => file.format === MP3),
     };
   }
+
+  async getHello() {
+    return {
+      test: 'hello',
+    };
+  }
 }
