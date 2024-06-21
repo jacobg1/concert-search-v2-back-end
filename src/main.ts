@@ -1,9 +1,11 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { HttpStatus } from '@nestjs/common';
-import { Handler } from 'aws-lambda';
+import { APIGatewayProxyEventV2, Handler } from 'aws-lambda';
 import { ConcertService } from './services/concert.service';
+import { handleResponse, handleError } from './helpers';
+import { HttpRoutes } from './interface/concerts.enum';
+import { extractReqData } from './helpers/request';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule, {
@@ -13,28 +15,34 @@ async function bootstrap() {
   return app;
 }
 
-export const handler: Handler = async () => {
+const routeConfig = {
+  [HttpRoutes.LIST_CONCERTS]: 'getConcertList',
+  [HttpRoutes.GET_CONCERT_BY_ID]: 'getSingleConcert',
+};
+
+export const handler: Handler = async (event: APIGatewayProxyEventV2) => {
   try {
+    const { routeKey } = event;
+
+    if (!routeKey) {
+      throw new Error('Invalid request');
+    }
+
+    const routeHandler = routeConfig[routeKey];
+
+    if (!routeHandler) {
+      throw Error('Not found');
+    }
+
     const appContext = await bootstrap();
     const appService = appContext.get(ConcertService);
 
-    return {
-      body: JSON.stringify(await appService.getHello()),
-      statusCode: HttpStatus.OK,
-    };
+    const requestData = extractReqData(event);
+    const response = await appService[routeHandler](requestData);
+
+    return handleResponse(response);
   } catch (error) {
     Logger.error(error);
-
-    const errorMessage = error.message || 'Internal Server Error';
-
-    return {
-      statusCode: error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
-      isBase64Encoded: false,
-      headers: {
-        'Content-Type': 'application/json',
-        'x-amzn-ErrorType': 'Error',
-      },
-      body: JSON.stringify({ message: errorMessage }),
-    };
+    return handleError(error);
   }
 };

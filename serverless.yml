@@ -19,5 +19,8 @@ functions:
     handler: dist/main.handler
     events:
       - httpApi:
-          method: ANY
-          path: '/{proxy+}'
+          method: POST
+          path: '/concerts'
+      - httpApi:
+          method: GET
+          path: '/concerts/{id}'

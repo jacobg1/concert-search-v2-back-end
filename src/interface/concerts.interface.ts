@@ -97,3 +97,9 @@ export interface ConcertData {
 export interface ConcertResponse extends Omit<ConcertData, 'trackList'> {
   files: TrackListData[];
 }
+
+export interface RequestData {
+  body?: ConcertSearchOptions;
+  queryStringParameters?: { id: string };
+  pathParameters?: Record<string, string>;
+}

@@ -15,12 +15,11 @@ const { MP3 } = MediaFormat;
 
 @Injectable()
 export class ConcertService {
-  async getConcertList({
-    searchTerm,
-    max,
-    sortBy,
-    ...rest
-  }: ConcertSearchOptions): Promise<PaginatedConcertList> {
+  async getConcertList(request: {
+    body: ConcertSearchOptions;
+  }): Promise<PaginatedConcertList> {
+    const { searchTerm, max, sortBy, ...rest } = request.body;
+
     const searchOptions: ArchiveSearchOptions = {
       ...baseOptions,
       max,
@@ -35,8 +34,11 @@ export class ConcertService {
     return paginateResponse(searchConcerts, rest);
   }
 
-  async getSingleConcert(id: string): Promise<ConcertData> {
+  async getSingleConcert(request): Promise<ConcertData> {
+    const { id } = request.pathParameters;
+
     const concert: ConcertResponse = await archiveSearch.metaSearch(id);
+
     const { metadata, files } = concert;
 
     return {
@@ -44,12 +46,6 @@ export class ConcertService {
       // Filter for mp3 so that we don't send uneeded formats to front-end
       // We can switch formats by updating file name someId.mp3 => someId.ogg
       trackList: files.filter((file) => file.format === MP3),
-    };
-  }
-
-  async getHello() {
-    return {
-      test: 'hello',
     };
   }
 }
