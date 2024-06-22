@@ -17,6 +17,7 @@ provider:
     cors: 
       allowedOrigins: 
         - "https://concert-search.com"
+        - "https://www.concert-search.com"
       allowedMethods:
         - GET
         - POST
