@@ -48,13 +48,16 @@ export function paginateResponse(
   searchResponse: SearchResponse,
   { filterDuplicates, mediaFormat }: FilterParams,
 ): PaginatedConcertList {
+  const dateLookup = {};
+
   const filterAndDedupe = searchResponse.docs.reduce<SingleConcert[]>(
     (acc, curr) => {
       if (filterDuplicates) {
         if (
           isProperFormat(curr.format, mediaFormat) &&
-          !acc.some(({ date }) => date === curr.date)
+          !dateLookup[curr.date]
         ) {
+          dateLookup[curr.date] = true;
           return acc.concat(curr);
         }
         return acc;
