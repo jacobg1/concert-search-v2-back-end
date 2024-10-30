@@ -11,15 +11,15 @@ export function handleResponse(body) {
 }
 
 export function handleError(error) {
-  const errorMessage = error.message || 'Internal Server Error';
+  const errorMessage = error?.message || 'Internal Server Error';
 
   return {
-    statusCode: error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
+    statusCode: error?.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
     isBase64Encoded: false,
     headers: {
       'Content-Type': 'application/json',
       'x-amzn-ErrorType': 'Error',
     },
-    body: JSON.stringify({ message: errorMessage }),
+    body: JSON.stringify({ message: errorMessage || 'Request Failed' }),
   };
 }

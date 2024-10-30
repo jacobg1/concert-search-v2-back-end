@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build --webpack",
-		"deploy": "npm run build && serverless deploy --stage prod",
+    "deploy": "npm run build && serverless deploy --stage prod",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start:dev": "npx serverless offline start --reloadHandler",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -20,7 +20,7 @@
   "dependencies": {
     "@nestjs/common": "^10.3.9",
     "@nestjs/core": "^10.3.9",
-    "archive-search": "1.0.15",
+    "archive-search": "1.1.15",
     "aws-lambda": "^1.0.7",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",

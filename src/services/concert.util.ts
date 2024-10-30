@@ -11,23 +11,7 @@ import {
 
 export const baseOptions: BaseSearchOptions = {
   searchBy: 'creator',
-  fields: [
-    'avg_rating',
-    'reviews',
-    'coverage',
-    'creator',
-    'date',
-    'description',
-    'downloads',
-    'format',
-    'licenseurl',
-    'mediatype',
-    'name',
-    'num_reviews',
-    'source',
-    'title',
-    'year',
-  ],
+  fields: ['date', 'description', 'format', 'mediatype', 'source', 'title'],
 };
 
 // This ensures that concerts will have requested formats sent from front-end
