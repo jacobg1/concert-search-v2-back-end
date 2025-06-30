@@ -1,7 +1,7 @@
 import { Logger, NotFoundException } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { APIGatewayProxyEventV2, Handler } from 'aws-lambda';
+import type { APIGatewayProxyEventV2, Handler } from 'aws-lambda';
 import { ConcertService } from './services';
 import { extractReqData, handleResponse, handleError } from './helpers';
 import { HttpRoutes } from './interface';
