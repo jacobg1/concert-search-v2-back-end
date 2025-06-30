@@ -1,15 +1,15 @@
 import { archiveSearch } from 'archive-search';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { baseOptions, paginateResponse } from './concert.util';
-import {
+import type {
   ConcertSearchOptions,
   SearchResponse,
   PaginatedConcertList,
   ConcertData,
-  MediaFormat,
   ArchiveSearchOptions,
   ConcertResponse,
 } from '../interface';
+import { MediaFormat } from '../interface';
 import { ConcertValidator } from '../helpers';
 
 const { MP3 } = MediaFormat;
