@@ -1,8 +1,9 @@
-import { BadRequestException } from '@nestjs/common';
+import { Logger, BadRequestException } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { ConcertListDto } from '../dto';
-import { ConcertSearchOptions, MediaFormat } from '../interface';
+import { MediaFormat } from '../interface';
+import type { ConcertSearchOptions } from '../interface';
 
 export class ConcertValidator {
   formatValue(value: string[]): MediaFormat[] {
@@ -30,10 +31,22 @@ export class ConcertValidator {
         return (acc += `${sep}${curr}`);
       };
 
+      Logger.error(errors);
+
+      // TODO - recursive function to format errors
       throw new BadRequestException(
         errors
-          .map(({ constraints }) => {
-            const array = Object.values(constraints);
+          .map(({ constraints, children }) => {
+            const nestedErrorsArray = children?.length
+              ? children.map(({ constraints }) => Object.values(constraints))
+              : [];
+
+            const constraintsArray = constraints
+              ? Object.values(constraints)
+              : [];
+
+            const array = [...constraintsArray, ...nestedErrorsArray];
+
             return array.reduce(joinErrors(array), '');
           })
           .join(', '),
