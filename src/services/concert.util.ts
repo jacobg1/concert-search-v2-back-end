@@ -1,13 +1,13 @@
 import { BadRequestException } from '@nestjs/common';
 import chunk from 'lodash.chunk';
-import {
+import type {
   BaseSearchOptions,
   ConcertSearchOptions,
-  MediaFormat,
   PaginatedConcertList,
   SearchResponse,
   SingleConcert,
 } from '../interface';
+import { MediaFormat } from '../interface';
 
 export const baseOptions: BaseSearchOptions = {
   searchBy: 'creator',
