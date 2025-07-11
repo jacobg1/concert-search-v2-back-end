@@ -1,4 +1,24 @@
+const dotenv = require('dotenv');
 const TerserPlugin = require('terser-webpack-plugin');
+const { DefinePlugin } = require('webpack');
+
+function getEntryPoint(withMocks) {
+  return withMocks ? './src/mocks/mockMain.ts' : './src/main.ts';
+}
+
+function getExternals(withMocks) {
+  return withMocks ? ['_http_common'] : [];
+}
+
+function addEnvVariables(withMocks) {
+  if (!withMocks) return [];
+
+  return [
+    new DefinePlugin({
+      'process.env': JSON.stringify(dotenv.config().parsed),
+    }),
+  ];
+}
 
 module.exports = (options, webpack) => {
   const ignoreImports = [
@@ -9,7 +29,8 @@ module.exports = (options, webpack) => {
 
   return {
     ...options,
-    externals: [],
+    entry: getEntryPoint(process.env.WITH_MOCKS),
+    externals: getExternals(process.env.WITH_MOCKS),
     optimization: {
       minimizer: [
         new TerserPlugin({
@@ -25,6 +46,7 @@ module.exports = (options, webpack) => {
     },
     plugins: [
       ...options.plugins,
+      ...addEnvVariables(process.env.WITH_MOCKS),
       new webpack.IgnorePlugin({
         checkResource(resource) {
           if (ignoreImports.includes(resource)) {
