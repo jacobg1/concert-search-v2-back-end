@@ -46,5 +46,5 @@ module.exports = defineConfig([
       '@typescript-eslint/no-unused-vars': 'off',
     },
   },
-  globalIgnores(['**/eslint.config.js', '**/webpack.config.js']),
+  globalIgnores(['**/eslint.config.js', '**/webpack.config.js', '**/dist']),
 ]);
