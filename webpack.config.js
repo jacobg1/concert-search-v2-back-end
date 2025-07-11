@@ -1,5 +1,13 @@
 const TerserPlugin = require('terser-webpack-plugin');
 
+function getEntryPoint(withMocks) {
+  return withMocks ? './src/mocks/mockMain.ts' : './src/main.ts';
+}
+
+function getExternals(withMocks) {
+  return withMocks ? ['_http_common'] : [];
+}
+
 module.exports = (options, webpack) => {
   const ignoreImports = [
     '@nestjs/microservices/microservices-module',
@@ -9,7 +17,8 @@ module.exports = (options, webpack) => {
 
   return {
     ...options,
-    externals: [],
+    entry: getEntryPoint(process.env.WITH_MOCKS),
+    externals: getExternals(process.env.WITH_MOCKS),
     optimization: {
       minimizer: [
         new TerserPlugin({
