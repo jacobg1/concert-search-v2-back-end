@@ -11,7 +11,7 @@ server.events.on('request:start', ({ request }) => {
   console.log('MSW intercepted:', request.method, request.url);
 });
 
-export const handler: Handler = async (
+export const handler: Handler = (
   event: APIGatewayProxyEventV2,
   context: Context,
   callback: Callback<any>,
