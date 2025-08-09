@@ -13,6 +13,8 @@ package:
 provider:
   name: aws
   runtime: nodejs22.x
+  environment:
+    NODE_ENV: production
   httpApi:
     cors: 
       allowedOrigins: 
