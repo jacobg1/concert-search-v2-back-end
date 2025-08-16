@@ -7,8 +7,8 @@ import type {
 } from 'aws-lambda';
 import { server } from './node';
 
-server.events.on('request:start', ({ request }) => {
-  console.log('MSW intercepted:', request.method, request.url);
+server.events.on('request:start', ({ request: { method, url } }) => {
+  console.log('MSW intercepted:', method, url);
 });
 
 export const handler: Handler = (
