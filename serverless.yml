@@ -14,16 +14,9 @@ provider:
   name: aws
   runtime: nodejs22.x
   environment:
-    NODE_ENV: production
+    NODE_ENV: ${env:NODE_ENV, "production"}
   httpApi:
-    cors: 
-      allowedOrigins: 
-        - "https://concert-search.com"
-        - "https://www.concert-search.com"
-      allowedMethods:
-        - GET
-        - POST
-      maxAge: 600
+    cors: ${file(./serverless/cors/cors_${env:NODE_ENV, "production"}.yml):cors}
 
 functions:
   main:
